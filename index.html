@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaba — 次世代プログラミング言語</title>
+<meta name="description" content="Java構文ベース × Python・C・C++・C#・JavaScript の精髄を統合した新世代プログラミング言語">
+<meta property="og:title" content="Chaba Programming Language">
+<meta property="og:description" content="Java構文ベース × 5言語の精髄を統合した次世代プログラミング言語">
+<meta property="og:image" content="assets/Chaba.png">
+<link rel="icon" href="assets/Chaba.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg0:      #080c10;
+  --bg1:      #0d1117;
+  --bg2:      #131920;
+  --bg3:      #1a2330;
+  --surface:  #192030;
+  --border:   rgba(78,180,100,0.15);
+  --green:    #4eb464;
+  --green-hi: #7dd994;
+  --green-lo: #2d6b3d;
+  --teal:     #00b5a3;
+  --teal-hi:  #00d4bf;
+  --text:     #dde6ef;
+  --text-dim: #8b9aaa;
+  --text-hi:  #ffffff;
+  --code-bg:  #0d1520;
+  --radius:   10px;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+  --font-ui:  'Inter', 'Noto Sans JP', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg0);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 60px;
+  background: rgba(8,12,16,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-logo img { width: 28px; height: 28px; object-fit: contain; }
+.nav-logo span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-hi);
+  letter-spacing: 0.03em;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--green-hi); }
+.nav-cta {
+  padding: 7px 18px;
+  background: var(--green-lo);
+  border: 1px solid var(--green);
+  border-radius: 6px;
+  color: var(--green-hi) !important;
+  font-weight: 600 !important;
+  transition: background 0.2s, box-shadow 0.2s !important;
+}
+.nav-cta:hover {
+  background: var(--green) !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(78,180,100,0.35) !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 2rem 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(78,180,100,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,181,163,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(78,180,100,0.1);
+  border: 1px solid rgba(78,180,100,0.3);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--green-hi);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero-mascot {
+  width: 140px; height: 140px;
+  object-fit: contain;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 0 40px rgba(78,180,100,0.3));
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-hi);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.hero h1 .brand {
+  background: linear-gradient(120deg, var(--green-hi), var(--teal-hi));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--text-dim);
+  max-width: 640px;
+  margin: 1rem auto 2.5rem;
+  font-weight: 300;
+  line-height: 1.7;
+}
+.hero-langs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.lang-pill {
+  padding: 4px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.lang-pill.base {
+  background: rgba(78,180,100,0.15);
+  border-color: rgba(78,180,100,0.4);
+  color: var(--green-hi);
+}
+.lang-sep { color: var(--text-dim); font-size: 1rem; }
+.hero-btns {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  justify-content: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--green);
+  color: #000;
+  border: 1px solid var(--green-hi);
+}
+.btn-primary:hover {
+  background: var(--green-hi);
+  box-shadow: 0 0 30px rgba(78,180,100,0.4);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-ghost:hover {
+  border-color: var(--green);
+  color: var(--green-hi);
+  background: rgba(78,180,100,0.08);
+}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: fadeIn 2s ease 1s both;
+}
+.scroll-hint .arrow {
+  width: 20px; height: 20px;
+  border-right: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  transform: rotate(45deg);
+  animation: bounce 1.5s infinite;
+}
+@keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(4px)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* ── SECTIONS ── */
+section { padding: 100px 2rem; }
+.container { max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 560px;
+  line-height: 1.8;
+}
+
+/* ── FEATURES ── */
+#features { background: var(--bg1); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.feature-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(78,180,100,0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-icon {
+  width: 44px; height: 44px;
+  background: rgba(78,180,100,0.12);
+  border: 1px solid rgba(78,180,100,0.25);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 1.2rem;
+}
+.feature-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin-bottom: 0.6rem;
+}
+.feature-card p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.feature-card .tag {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 3px 10px;
+  background: rgba(78,180,100,0.1);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--green-hi);
+  border: 1px solid rgba(78,180,100,0.2);
+}
+
+/* ── CODE ── */
+#code { background: var(--bg0); }
+.code-wrap {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid rgba(78,180,100,0.2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(78,180,100,0.1);
+}
+.code-dots { display: flex; gap: 6px; }
+.code-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.code-dots .r { background: #ff5f57; }
+.code-dots .y { background: #febc2e; }
+.code-dots .g { background: #28c840; }
+.code-filename {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.code-lang {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+pre {
+  padding: 1.4rem 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  overflow-x: auto;
+  tab-size: 4;
+}
+/* Syntax highlight */
+.kw  { color: #c792ea; }
+.ty  { color: #82aaff; }
+.fn  { color: #7dd994; }
+.st  { color: #f78c6c; }
+.cm  { color: #546e7a; font-style: italic; }
+.nu  { color: #f8c762; }
+.op  { color: #89ddff; }
+.pt  { color: #ff9cac; }
+
+/* ── TYPE SYSTEM ── */
+#types { background: var(--bg1); }
+.types-table-wrap {
+  margin-top: 2.5rem;
+  overflow: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+thead tr {
+  background: rgba(78,180,100,0.08);
+  border-bottom: 1px solid var(--border);
+}
+thead th {
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(78,180,100,0.04); }
+tbody td {
+  padding: 11px 20px;
+  color: var(--text-dim);
+  vertical-align: top;
+}
+tbody td:first-child {
+  font-family: var(--font-mono);
+  color: var(--text-hi);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+tbody td:nth-child(2) {
+  font-family: var(--font-mono);
+  color: var(--green);
+  font-size: 0.78rem;
+}
+
+/* ── STUDIO PRO ── */
+#studio {
+  background: var(--bg0);
+  position: relative;
+  overflow: hidden;
+}
+#studio::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,181,163,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.studio-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.studio-logo {
+  width: 160px; height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 40px rgba(0,181,163,0.3));
+  animation: float 5s ease-in-out infinite 1s;
+}
+.studio-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.sf-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.sf-check {
+  width: 20px; height: 20px;
+  min-width: 20px;
+  background: rgba(0,181,163,0.15);
+  border: 1px solid rgba(0,181,163,0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+  font-size: 0.65rem;
+  color: var(--teal-hi);
+}
+.sf-item span {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.sf-item strong { color: var(--text-hi); font-weight: 600; }
+.btn-teal {
+  background: var(--teal);
+  color: #000;
+  border: 1px solid var(--teal-hi);
+}
+.btn-teal:hover {
+  background: var(--teal-hi);
+  box-shadow: 0 0 30px rgba(0,181,163,0.4);
+  transform: translateY(-1px);
+}
+
+/* ── PIPELINE ── */
+#pipeline { background: var(--bg1); }
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0;
+  margin-top: 3rem;
+  position: relative;
+}
+.pipeline-steps::before {
+  content: '';
+  position: absolute;
+  top: 40px; left: 75px; right: 75px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green-lo), var(--green), var(--teal), var(--teal));
+}
+.pipe-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+.pipe-circle {
+  width: 80px; height: 80px;
+  background: var(--bg2);
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.pipe-circle:hover {
+  border-color: var(--green-hi);
+  box-shadow: 0 0 24px rgba(78,180,100,0.3);
+}
+.pipe-step:last-child .pipe-circle {
+  border-color: var(--teal);
+}
+.pipe-step:last-child .pipe-circle:hover {
+  border-color: var(--teal-hi);
+  box-shadow: 0 0 24px rgba(0,181,163,0.3);
+}
+.pipe-name {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-hi);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.pipe-desc {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg0);
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+.footer-logo img { width: 32px; height: 32px; object-fit: contain; }
+.footer-logo span {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--green-hi);
+  font-family: var(--font-mono);
+}
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 2.2;
+}
+.footer-copy a {
+  color: var(--green);
+  text-decoration: none;
+}
+.footer-copy a:hover { color: var(--green-hi); }
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--green-hi); }
+.footer-divider {
+  width: 40px; height: 1px;
+  background: var(--border);
+  margin: 2rem auto;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .code-wrap { grid-template-columns: 1fr; }
+  .studio-inner { grid-template-columns: 1fr; text-align: center; }
+  .studio-inner > div:first-child { display: flex; flex-direction: column; align-items: center; }
+  .pipeline-steps::before { display: none; }
+  .pipeline-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, .hero-mascot { animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="assets/Chaba.png" alt="Chaba">
+    <span>Chaba</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">特徴</a></li>
+    <li><a href="#code">構文</a></li>
+    <li><a href="#types">型システム</a></li>
+    <li><a href="#pipeline">コンパイラ</a></li>
+    <li><a href="#studio">Studio Pro</a></li>
+    <li><a href="https://github.com/Altice-kun" target="_blank" class="nav-cta">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Java 21 powered · CVM 113 instructions
+  </div>
+  <img src="assets/Chaba.png" alt="Chaba mascot" class="hero-mascot">
+  <h1><span class="brand">Chaba</span><br>Language</h1>
+  <p class="hero-sub">
+    Java構文ベース × Python・C・C++・C#・JavaScript の精髄を統合した<br>
+    静的型付け・スタックベースVM・次世代プログラミング言語
+  </p>
+  <div class="hero-langs">
+    <span class="lang-pill base">Java</span>
+    <span class="lang-sep">+</span>
+    <span class="lang-pill">Python</span>
+    <span class="lang-sep">+</span>
+    <span class="lang-pill">C / C++</span>
+    <span class="lang-sep">+</span>
+    <span class="lang-pill">C#</span>
+    <span class="lang-sep">+</span>
+    <span class="lang-pill">JavaScript</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#code" class="btn btn-primary">&#9654; 構文を見る</a>
+    <a href="https://github.com/Altice-kun" target="_blank" class="btn btn-ghost">⭐ GitHub</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <p class="section-label">Language Features</p>
+    <h2 class="section-title">5言語の精髄を<br>ひとつに</h2>
+    <p class="section-desc">
+      Chabaは複数の言語のベストな機能を厳選し、Javaの明快な構文をベースに再構築した言語です。
+    </p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>Java ベース構文</h3>
+        <p>明快で読みやすいJava構文を基盤に。慣れ親しんだ書き方のままで、モダンな機能を享受できます。</p>
+        <span class="tag">Java</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>厳格な null 安全性</h3>
+        <p><code>T</code> と <code>T?</code> は完全に別の型。null参照例外をコンパイル時に防ぎます。型注釈は必須で型推論なし。</p>
+        <span class="tag">C# / Kotlin</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>unsafe ブロック</h3>
+        <p>OS直接操作、生ポインタ演算、インラインシステムコールをJava風の構文で記述できます。</p>
+        <span class="tag">C / C++</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✂️</div>
+        <h3>スライス構文</h3>
+        <p>Pythonライクな直感的スライス操作で、配列・文字列の部分参照を簡潔に記述できます。</p>
+        <span class="tag">Python</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <h3>演算子オーバーロード &amp; LINQ</h3>
+        <p>C#由来の演算子オーバーロードとLINQライクなコレクション操作で表現力豊かなコードを。</p>
+        <span class="tag">C#</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🕸️</div>
+        <h3>多重継承</h3>
+        <p>C++スタイルの多重継承をサポート。インターフェースの制約なく、柔軟なクラス設計が可能です。</p>
+        <span class="tag">C++</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>CVM 仮想マシン</h3>
+        <p>独自スタックベースVM「CVM (Chaba Virtual Machine)」上で動作。113命令セット、Java 21実装済み。</p>
+        <span class="tag">Bytecode</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧪</div>
+        <h3>テスト駆動開発</h3>
+        <p>332テスト全パス実績。Lexer・Parser・Semantic Analyzer・Code Generator の各フェーズで品質を保証。</p>
+        <span class="tag">332 tests ✓</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔤</div>
+        <h3>型共有 &amp; インデクサ</h3>
+        <p>型共有（CX Projects由来）とC#スタイルのインデクサで、柔軟なデータアクセスパターンを実現。</p>
+        <span class="tag">C# / CX</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE -->
+<section id="code">
+  <div class="container">
+    <p class="section-label">Syntax</p>
+    <h2 class="section-title">Chaba 構文サンプル</h2>
+    <p class="section-desc">Javaに最大限準拠した明快な構文。型注釈必須で安全性を確保します。</p>
+    <div class="code-wrap">
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <span class="code-filename">hello.chb</span>
+          <span class="code-lang">Chaba</span>
+        </div>
+        <pre><span class="cm">// 基本的な再帰関数</span>
+<span class="kw">public static</span> <span class="ty">int</span> <span class="fn">factorial</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n <span class="op">&lt;=</span> <span class="nu">1</span>) {
+        <span class="kw">return</span> <span class="nu">1</span>;
+    }
+    <span class="kw">return</span> n <span class="op">*</span> <span class="fn">factorial</span>(n <span class="op">-</span> <span class="nu">1</span>);
+}
+
+<span class="cm">// null安全 — int と int? は別の型</span>
+<span class="kw">public static</span> <span class="ty">int?</span> <span class="fn">safeDivide</span>(<span class="ty">int</span> a, <span class="ty">int</span> b) {
+    <span class="kw">if</span> (b <span class="op">==</span> <span class="nu">0</span>) {
+        <span class="kw">return</span> <span class="kw">null</span>;
+    }
+    <span class="kw">return</span> a <span class="op">/</span> b;
+}
+
+<span class="cm">// OS直接操作 — ochaba.util.System</span>
+<span class="kw">public static void</span> <span class="fn">writeByteToOS</span>(<span class="ty">uint8</span> value) {
+    <span class="pt">ochaba.util.System</span>(safe.cancellation) {
+        <span class="ty">int</span> buffer <span class="op">=</span> <span class="pt">pointer</span><span class="op">&lt;</span><span class="ty">uint8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="fn">memalloc</span>(<span class="nu">1</span>);
+        buffer <span class="op">=</span> <span class="pt">chaba.util.convert</span>.value;
+        <span class="fn">syscall</span>(<span class="nu">1</span>, <span class="nu">1</span>, buffer, <span class="nu">1</span>);
+        <span class="fn">memfree</span>(buffer);
+    }
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <span class="code-filename">main.chb</span>
+          <span class="code-lang">Chaba</span>
+        </div>
+        <pre><span class="cm">// 変数宣言 — 型明示必須</span>
+<span class="ty">int</span> count <span class="op">=</span> <span class="nu">0</span>;
+<span class="ty">String</span> name <span class="op">=</span> <span class="st">"Chaba"</span>;
+
+<span class="cm">// while ループ</span>
+<span class="kw">public static</span> <span class="ty">int</span> <span class="fn">sum</span>(<span class="ty">int</span> limit) {
+    <span class="ty">int</span> acc <span class="op">=</span> <span class="nu">0</span>;
+    <span class="ty">int</span> i <span class="op">=</span> <span class="nu">0</span>;
+    <span class="kw">while</span> (i <span class="op">&lt;</span> limit) {
+        acc<span class="op">++</span>;
+        i<span class="op">++</span>;
+    }
+    <span class="kw">return</span> acc;
+}
+
+<span class="cm">// VRAM 直接書き込み</span>
+<span class="kw">public static void</span> <span class="fn">drawPixel</span>() {
+    <span class="ty">int</span> w <span class="op">=</span> <span class="nu">640</span>;
+    <span class="ty">int</span> vram <span class="op">=</span> <span class="pt">pointer</span><span class="op">&lt;</span><span class="ty">uint32</span><span class="op">&gt;</span>
+            <span class="op">=</span> <span class="nu">0xA0000000</span>;
+    <span class="pt">ochaba.util.System</span>(safe.cancellation) {
+        <span class="ty">int</span> off <span class="op">=</span> (<span class="nu">50</span> <span class="op">*</span> w) <span class="op">+</span> <span class="nu">100</span>;
+        <span class="op">*</span>(vram <span class="op">+</span> off) <span class="op">=</span> <span class="nu">0xFFFF0000</span>;
+    }
+}</pre>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TYPES -->
+<section id="types">
+  <div class="container">
+    <p class="section-label">Type System</p>
+    <h2 class="section-title">プリミティブ型一覧</h2>
+    <p class="section-desc">静的型付けで安全性を保証。全ての変数に明示的な型注釈が必要です。</p>
+    <div class="types-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>型名</th>
+            <th>由来</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Int / Int32 / Int16 / Int8</td><td>Java / C</td><td>符号付き整数（デフォルト64bit）</td></tr>
+          <tr><td>UInt / UInt32 / UInt16 / UInt8</td><td>C / C++</td><td>符号なし整数</td></tr>
+          <tr><td>Float / Float32</td><td>Java / C</td><td>IEEE 754 浮動小数点数</td></tr>
+          <tr><td>Bool</td><td>Java</td><td>真偽値 — true / false</td></tr>
+          <tr><td>Char</td><td>Java</td><td>Unicode文字</td></tr>
+          <tr><td>String</td><td>Java</td><td>不変文字列</td></tr>
+          <tr><td>Void</td><td>Java / C</td><td>戻り値なし</td></tr>
+          <tr><td>Size</td><td>C</td><td>メモリサイズ / オフセット</td></tr>
+          <tr><td>ptr&lt;T&gt;</td><td>C / C++</td><td>生ポインタ（unsafe専用）</td></tr>
+          <tr><td>T?</td><td>C# / Kotlin</td><td>nullable型（T と T? は完全に別）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <div class="container">
+    <p class="section-label">Compiler Pipeline</p>
+    <h2 class="section-title">コンパイラ パイプライン</h2>
+    <p class="section-desc">Java 21 で実装された5段階のコンパイルパイプライン。332テスト全パス済み。</p>
+    <div class="pipeline-steps">
+      <div class="pipe-step">
+        <div class="pipe-circle">🔤</div>
+        <div class="pipe-name">Lexer</div>
+        <div class="pipe-desc">字句解析<br>トークン列生成</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-circle">🌳</div>
+        <div class="pipe-name">Parser</div>
+        <div class="pipe-desc">構文解析<br>AST構築</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-circle">🔍</div>
+        <div class="pipe-name">Semantic</div>
+        <div class="pipe-desc">意味解析<br>型検査・スコープ</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-circle">⚙️</div>
+        <div class="pipe-name">CodeGen</div>
+        <div class="pipe-desc">コード生成<br>バイトコード出力</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-circle" style="border-color:var(--teal)">▶️</div>
+        <div class="pipe-name" style="color:var(--teal-hi)">CVM</div>
+        <div class="pipe-desc">スタックVM<br>113命令実行</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDIO PRO -->
+<section id="studio">
+  <div class="container">
+    <div class="studio-inner">
+      <div>
+        <img src="assets/Chaba_Studio_Pro.png" alt="Chaba Studio Pro" class="studio-logo">
+      </div>
+      <div>
+        <p class="section-label">IDE</p>
+        <h2 class="section-title">Chaba Studio Pro</h2>
+        <p class="section-desc">
+          2000年代Adobe CS風の美学を持つ、Chaba言語専用の統合開発環境。
+          Electronベースのデスクトップアプリとして開発中。
+        </p>
+        <div class="studio-features">
+          <div class="sf-item">
+            <div class="sf-check">✓</div>
+            <span><strong>Chaba構文ハイライト</strong> — 言語専用カラーテーマ</span>
+          </div>
+          <div class="sf-item">
+            <div class="sf-check">✓</div>
+            <span><strong>統合ターミナル</strong> — CVM実行・コンパイル出力をリアルタイム表示</span>
+          </div>
+          <div class="sf-item">
+            <div class="sf-check">✓</div>
+            <span><strong>ファイルエクスプローラー</strong> — プロジェクト管理・タブ操作</span>
+          </div>
+          <div class="sf-item">
+            <div class="sf-check">✓</div>
+            <span><strong>問題パネル</strong> — コンパイルエラーをリアルタイム検出</span>
+          </div>
+          <div class="sf-item">
+            <div class="sf-check">✓</div>
+            <span><strong>マルチプラットフォーム</strong> — Windows / macOS / Linux 対応</span>
+          </div>
+        </div>
+        <div style="margin-top:2rem">
+          <a href="https://github.com/Altice-kun" target="_blank" class="btn btn-teal">
+            詳細を見る →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="assets/Chaba.png" alt="Chaba">
+    <span>Chaba Language</span>
+  </div>
+  <div class="footer-links">
+    <a href="#features">特徴</a>
+    <a href="#code">構文</a>
+    <a href="#types">型システム</a>
+    <a href="#pipeline">コンパイラ</a>
+    <a href="#studio">Studio Pro</a>
+    <a href="https://github.com/Altice-kun" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-copy">
+    Copyright &copy; 2026 <strong>Altice</strong> / <strong>おちゃば</strong> / <strong>Chaba Language Project Team</strong> / <strong>Altice Works Co. Ltd.</strong><br>
+    All rights reserved.<br>
+    <br>
+    <small>Built with ❤️ on Java 21 &nbsp;·&nbsp; CVM 113 instructions &nbsp;·&nbsp; 332 tests passing</small>
+  </div>
+</footer>
+
+<script>
+// Smooth active nav highlight on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+function onScroll() {
+  let cur = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 90) cur = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#'+cur ? 'var(--green-hi)' : '';
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// Stagger feature card entrance
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      entry.target.style.animation = `fadeIn 0.5s ease ${i * 0.07}s both`;
+      entry.target.style.opacity = '1';
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.feature-card, .pipe-step').forEach((el, i) => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
