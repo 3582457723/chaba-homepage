@@ -654,8 +654,6 @@ footer {
 .error-section {
   min-height: calc(100vh - 60px); /* ナビゲーションの高さを考慮 */
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 80px 2rem;
   background: radial-gradient(circle at 50% 50%, #0c1a14 0%, var(--bg0) 80%);
   position: relative;
@@ -692,8 +690,7 @@ footer {
 .error-container {
   position: relative;
   z-index: 2;
-  text-align: center;
-  max-width: 600px;
+  text-align: stretch;
 }
 
 .error-title {
@@ -779,10 +776,53 @@ footer {
 <footer>
   <div class="footer-logo">
     <img src="assets/Chaba.png" alt="Chaba">
-    <span>Chaba</span>
+    <span>Chaba Language</span>
   </div>
-  <p class="footer-copy">&copy; 2026 Chaba Language. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#features">特徴</a>
+    <a href="#code">構文</a>
+    <a href="#types">型システム</a>
+    <a href="#pipeline">コンパイラ</a>
+    <a href="#studio">Studio Pro</a>
+    <a href="https://github.com/Altice-kun/Chaba_language" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-copy">
+    Copyright &copy; 2026 <strong>Altice</strong> / <strong>おちゃば</strong> / <strong>Chaba Language Project Team</strong> / <strong>Altice Works Co. Ltd.</strong><br>
+    All rights reserved.<br>
+    <br>
+    <small>Built with ❤️ on Java 21 &nbsp;·&nbsp; CVM 113 instructions &nbsp;·&nbsp; 332 tests passing</small>
+  </div>
 </footer>
 
+<script>
+// Smooth active nav highlight on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+function onScroll() {
+  let cur = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 90) cur = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#'+cur ? 'var(--green-hi)' : '';
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// Stagger feature card entrance
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      entry.target.style.animation = `fadeIn 0.5s ease ${i * 0.07}s both`;
+      entry.target.style.opacity = '1';
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.feature-card, .pipe-step').forEach((el, i) => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
 </body>
 </html>
