@@ -12,6 +12,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+
+  @font-face {
+  font-family: 'sss';
+  src: url("https://altice-kun.github.io/chaba-homepage/font/sss.otf");
+  }
+  
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -646,79 +652,6 @@ footer {
   *, .hero-mascot { animation: none !important; }
 }
 
-/* ── INTERACTIVE 404 DEMO OVERLAY ── */
-.error-overlay {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, #1b3d27 0%, #112618 100%);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  transform: scale(1.05);
-  overflow: hidden;
-  user-select: none;
-}
-.error-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-}
-
-/* Giant background typography matching upload image */
-.error-bg-text-top {
-  position: absolute;
-  top: -3%;
-  left: -2%;
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(12rem, 32vw, 24rem);
-  font-weight: 900;
-  color: rgba(220, 240, 225, 0.05);
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  pointer-events: none;
-  z-index: 1;
-}
-.error-bg-text-bottom {
-  position: absolute;
-  bottom: -15%;
-  right: -5%;
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(16rem, 45vw, 36rem);
-  font-weight: 900;
-  color: rgba(220, 240, 225, 0.04);
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Main typography and capsule button */
-.error-content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  max-width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3.5rem;
-}
-.error-title {
-  color: #ffffff;
-  font-family: 'Inter', 'Noto Sans JP', sans-serif;
-  font-size: clamp(2rem, 5.8vw, 4.2rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-}
-
 /* Perfect replica of the pill/capsule button in the uploaded image */
 .error-btn-capsule {
   display: inline-flex;
@@ -800,16 +733,10 @@ footer {
     <li><a href="https://github.com/Altice-kun/Chaba_language" target="_blank" class="nav-cta">GitHub</a></li>
   </ul>
 </nav>
-
-  <!-- Chaba Glowing Mascot SVG -->
-<div id="error-404-screen" class="error-overlay">
-  <!-- Background huge typography matching upload image -->
-  <div class="error-bg-text-top">Error</div>
-  <div class="error-bg-text-bottom">404</div>
-
-  <div class="error-content">
-    <!-- That page is not found... -->
-    <h2 class="error-title">That page is not found...</h2>
+    <div style="hight: 250px;"></div>
+    <h1 style="color: #000000; font-family: 'sss'; align-item: center;">Error 404</h1>
+    <h3 style="color: #000000; font-family: 'sss'; align-time: center;">Sorry...It page is not found...
+  
     
     <!-- Go Back Home Capsule Button -->
     <button class="error-btn-capsule" href="https://altice-kun.github.io/chaba-homepage/">
